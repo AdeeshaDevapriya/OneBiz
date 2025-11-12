@@ -48,7 +48,7 @@ export default function Hero(): JSX.Element {
                 className="text-gray-600 mb-8"
               >
                 Professional, affordable single-page websites for local shops
-                and small businesses.
+                and small businesses
               </Typography>
 
               <Stack
