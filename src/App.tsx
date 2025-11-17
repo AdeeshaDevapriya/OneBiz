@@ -4,6 +4,7 @@ import About from './components/About'
 import Services from './components/Services'
 import Contact from './components/Contact'
 import Footer from './components/Footer'
+import Test from './components/Test'
 
 export default function App() {
   return (
@@ -32,6 +33,7 @@ export default function App() {
         <About />
         <Services />
         <Contact />
+        <Test />
       </main>
 
       <Footer />
