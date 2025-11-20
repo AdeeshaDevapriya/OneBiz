@@ -26,7 +26,7 @@ export default function Footer() {
 
 
 
-            <button onClick={() => setCount(count + 1)}>Increase</button>
+            {/* <button onClick={() => setCount(count + 1)}>Increase</button> */}
 
             <Button onClick={() => setCount(count + 1)}>Increase</Button>
 
