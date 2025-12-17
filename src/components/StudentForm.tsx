@@ -38,7 +38,7 @@ const StudentForm: React.FC = () => {
             setIsSuccess(false);
             return;
         }
-        setMessage('Sending data...');
+        setMessage('Sending data....');
         setIsSuccess(null);
 
         try {
