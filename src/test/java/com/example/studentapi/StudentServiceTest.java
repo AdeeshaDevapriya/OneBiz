@@ -43,4 +43,16 @@ class StudentServiceTest {
         // Ensure the repository was called exactly once with the correct ID
         verify(studentRepository, times(1)).findById(1);
     }
+
+    @Test
+    void testSaveStudent() {
+        Student student = new Student(1, "Adeesha", 25, "Colombo");
+        when(studentRepository.save(any(Student.class))).thenReturn(student);
+
+        StudentDTO savedDTO = studentService.saveStudent(new StudentDTO(0, "Adeesha", "Colombo", 25));
+
+        assertNotNull(savedDTO);
+        assertEquals("Adeesha", savedDTO.getName());
+        verify(studentRepository, times(1)).save(any(Student.class));
+    }
 }
