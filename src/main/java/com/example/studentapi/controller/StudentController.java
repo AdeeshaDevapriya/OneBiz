@@ -1,6 +1,5 @@
 package com.example.studentapi.controller;
 
-import com.example.studentapi.model.Student;
 import com.example.studentapi.service.StudentService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
@@ -10,7 +9,6 @@ import org.springframework.web.bind.annotation.*;
 import com.example.studentapi.dto.StudentDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import java.util.List;
 
 
 @CrossOrigin(origins = "*")
@@ -18,7 +16,6 @@ import java.util.List;
 @RequestMapping("/students")
 public class StudentController {
 
-    @Autowired
     private StudentService studentService;
 
     @PostMapping

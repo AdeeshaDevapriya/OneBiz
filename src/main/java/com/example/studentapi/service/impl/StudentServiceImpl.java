@@ -13,7 +13,6 @@ import java.util.stream.Collectors;
 @Service
 public class StudentServiceImpl implements StudentService {
 
-    @Autowired
     private StudentRepository studentRepository;
 
     @Override
@@ -34,7 +33,7 @@ public class StudentServiceImpl implements StudentService {
     public List<StudentDTO> getAllStudents() {
         return studentRepository.findAll().stream()
                 .map(s -> new StudentDTO(s.getId(), s.getName(), s.getCity(), s.getAge()))
-                .collect(Collectors.toList());
+                .toList();
     }
 
     @Override
