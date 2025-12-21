@@ -13,6 +13,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.List;
 import java.util.Optional;
 
 @ExtendWith(MockitoExtension.class)
@@ -54,5 +55,34 @@ class StudentServiceTest {
         assertNotNull(savedDTO);
         assertEquals("Adeesha", savedDTO.getName());
         verify(studentRepository, times(1)).save(any(Student.class));
+    }
+    @Test
+    void testGetAllStudents() {
+        // Arrange
+        List<Student> students = List.of(
+                new Student(1, "Adeesha", 25, "Colombo"),
+                new Student(2, "Kamal", 22, "Galle")
+        );
+        when(studentRepository.findAll()).thenReturn(students);
+
+        // Act
+        List<StudentDTO> result = studentService.getAllStudents();
+
+        // Assert
+        assertEquals(2, result.size());
+        verify(studentRepository, times(1)).findAll();
+    }
+
+    @Test
+    void testDeleteStudent() {
+        // Arrange
+        int studentId = 1;
+        doNothing().when(studentRepository).deleteById(studentId);
+
+        // Act
+        studentService.deleteStudent(studentId);
+
+        // Assert
+        verify(studentRepository, times(1)).deleteById(studentId);
     }
 }

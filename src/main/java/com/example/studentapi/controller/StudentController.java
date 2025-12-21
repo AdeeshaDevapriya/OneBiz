@@ -12,10 +12,14 @@ import com.example.studentapi.dto.StudentDTO;
 
 @CrossOrigin(origins = "*")
 @RestController
-@RequestMapping("/students")
+@RequestMapping("/api/v1/students")
 public class StudentController {
 
-    private StudentService studentService;
+    private final StudentService studentService;
+
+    public StudentController(StudentService studentService) {
+        this.studentService = studentService;
+    }
 
     @PostMapping
     public StudentDTO saveStudent(@Valid @RequestBody StudentDTO studentDTO) {
