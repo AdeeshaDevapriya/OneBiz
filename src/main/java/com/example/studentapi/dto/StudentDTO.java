@@ -15,7 +15,7 @@ public class StudentDTO {
     @NotBlank(message = "Name is required")
     private String name;
 
-    @NotBlank(message = "City is required")
+    @NotBlank(message = "City is required ")
     private String city;
 
     @Min(value = 5, message = "Age is required")
