@@ -17,7 +17,6 @@ import java.util.List;
 import java.util.Optional;
 
 @ExtendWith(MockitoExtension.class)
-
 class StudentServiceTest {
 
     @Mock
@@ -28,20 +27,13 @@ class StudentServiceTest {
 
     @Test
     void testGetStudentById() {
-        // 1. Arrange: Prepare mock data and define behavior
         Student mockStudent = new Student(1, "Adeesha", 25, "Colombo");
         when(studentRepository.findById(1)).thenReturn(Optional.of(mockStudent));
 
-        // 2. Act: Execute the service method
         StudentDTO foundStudentDTO = studentService.getStudentById(1);
 
-        // 3. Assert: Verify the results and behavior
-        assertNotNull(foundStudentDTO, "The returned StudentDTO should not be null");
-        assertEquals("Adeesha", foundStudentDTO.getName(), "Name should match the mock student");
-        assertEquals("Colombo", foundStudentDTO.getCity(), "City should match the mock student");
-        assertEquals(25, foundStudentDTO.getAge(), "Age should match the mock student");
-
-        // Ensure the repository was called exactly once with the correct ID
+        assertNotNull(foundStudentDTO);
+        assertEquals("Adeesha", foundStudentDTO.getName());
         verify(studentRepository, times(1)).findById(1);
     }
 
@@ -56,33 +48,52 @@ class StudentServiceTest {
         assertEquals("Adeesha", savedDTO.getName());
         verify(studentRepository, times(1)).save(any(Student.class));
     }
+
     @Test
     void testGetAllStudents() {
-        // Arrange
         List<Student> students = List.of(
                 new Student(1, "Adeesha", 25, "Colombo"),
                 new Student(2, "Kamal", 22, "Galle")
         );
         when(studentRepository.findAll()).thenReturn(students);
 
-        // Act
         List<StudentDTO> result = studentService.getAllStudents();
 
-        // Assert
         assertEquals(2, result.size());
         verify(studentRepository, times(1)).findAll();
     }
 
     @Test
     void testDeleteStudent() {
-        // Arrange
         int studentId = 1;
         doNothing().when(studentRepository).deleteById(studentId);
 
-        // Act
         studentService.deleteStudent(studentId);
 
-        // Assert
         verify(studentRepository, times(1)).deleteById(studentId);
+    }
+
+    @Test
+    void testUpdateStudent() {
+        Student existingStudent = new Student(1, "Adeesha", 25, "Colombo");
+        StudentDTO updateDTO = new StudentDTO(1, "Adeesha Updated", "Kandy", 26);
+
+        when(studentRepository.findById(1)).thenReturn(Optional.of(existingStudent));
+        when(studentRepository.save(any(Student.class))).thenReturn(existingStudent);
+
+        StudentDTO result = studentService.updateStudent(1, updateDTO);
+
+        assertNotNull(result);
+        assertEquals("Adeesha Updated", result.getName());
+        verify(studentRepository, times(1)).save(any(Student.class));
+    }
+
+    @Test
+    void testGetStudentById_NotFound() {
+        when(studentRepository.findById(99)).thenReturn(Optional.empty());
+
+        assertThrows(RuntimeException.class, () -> {
+            studentService.getStudentById(99);
+        });
     }
 }

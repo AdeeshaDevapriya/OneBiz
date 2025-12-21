@@ -31,7 +31,7 @@ class StudentControllerTest {
     void shouldSaveStudent() throws Exception {
         StudentDTO studentDTO = new StudentDTO(1, "Adeesha", "Colombo", 25);
 
-        // Mocking the service behavior
+// Mocking the service behavior
         when(studentService.saveStudent(any(StudentDTO.class))).thenReturn(studentDTO);
 
         mockMvc.perform(post("/api/v1/students")

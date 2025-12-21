@@ -13,7 +13,11 @@ import java.util.stream.Collectors;
 @Service
 public class StudentServiceImpl implements StudentService {
 
-    private StudentRepository studentRepository;
+    private final StudentRepository studentRepository;
+
+    public StudentServiceImpl(StudentRepository studentRepository) {
+        this.studentRepository = studentRepository;
+    }
 
     @Override
     public StudentDTO saveStudent(StudentDTO studentDTO) {
@@ -47,5 +51,21 @@ public class StudentServiceImpl implements StudentService {
     @Override
     public void deleteStudent(Integer id) {
         studentRepository.deleteById(id);
+    }
+
+    @Override
+    public StudentDTO updateStudent(Integer id, StudentDTO studentDTO) {
+
+        Student student = studentRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Student not found with ID: " + id));
+
+
+        student.setName(studentDTO.getName());
+        student.setCity(studentDTO.getCity());
+        student.setAge(studentDTO.getAge());
+
+
+        Student updatedStudent = studentRepository.save(student);
+        return new StudentDTO(updatedStudent.getId(), updatedStudent.getName(), updatedStudent.getCity(), updatedStudent.getAge());
     }
 }

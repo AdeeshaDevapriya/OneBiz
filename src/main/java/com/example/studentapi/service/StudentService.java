@@ -56,4 +56,5 @@ public interface StudentService {
     List<StudentDTO> getAllStudents();
     StudentDTO getStudentById(Integer id);
     void deleteStudent(Integer id);
+    StudentDTO updateStudent(Integer id, StudentDTO studentDTO);
 }
