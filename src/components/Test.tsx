@@ -6,7 +6,7 @@ export default function Footer() {
     const [count, setCount] = useState(0)
 
     useEffect(() => {
-        console.log("This is count : ", (count));
+        console.log("This is count :  ", (count));
     }, [count])
 
 

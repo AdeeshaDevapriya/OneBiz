@@ -52,7 +52,7 @@ const StudentForm: React.FC = () => {
             console.error('Error:', error);
             const errorMessage = error.response?.data?.message || error.message || 'Unknown error';
 
-            setMessage(`❌ Error: ${errorMessage}`);
+            setMessage(` Error: ${errorMessage}`);
             setIsSuccess(false);
         }
     };
