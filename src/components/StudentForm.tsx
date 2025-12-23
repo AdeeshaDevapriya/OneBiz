@@ -34,7 +34,7 @@ const StudentForm: React.FC = () => {
 
         // Validation
         if (!formData.name.trim() || formData.id <= 0 || formData.age <= 0 || !formData.city.trim()) {
-            setMessage('❌ Please fill all required fields correctly.');
+            setMessage('Please fill all required fields correctly.');
             setIsSuccess(false);
             return;
         }
