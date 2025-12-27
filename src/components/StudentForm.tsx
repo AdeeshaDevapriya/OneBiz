@@ -1,11 +1,23 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 // Assuming the Student interface is correctly located at this path
 import { Student } from './../types/Student';
-import { TextField, Button, Box, Typography, Alert, Container } from '@mui/material';
+import { TextField, Button, Box, Typography, Alert, Container, Dialog, DialogTitle, DialogContent, DialogActions, IconButton, Slide } from '@mui/material';
+import { Close as CloseIcon, CheckCircle as CheckCircleIcon, Error as ErrorIcon } from '@mui/icons-material';
+import { TransitionProps } from '@mui/material/transitions';
 import { addStudent } from '../services/studentService';
 
 // Backend API Endpoint
-const API_URL = "http://localhost:8080/students";
+const API_URL = "http://localhost:8080/api/v1/students";
+
+// Slide transition component for popup animation
+const Transition = React.forwardRef(function Transition(
+    props: TransitionProps & {
+        children: React.ReactElement<any, any>;
+    },
+    ref: React.Ref<unknown>,
+) {
+    return <Slide direction="up" ref={ref} {...props} />;
+});
 
 const StudentForm: React.FC = () => {
     // State used for storing form data (id is initially 0)
@@ -17,6 +29,7 @@ const StudentForm: React.FC = () => {
     });
     const [message, setMessage] = useState('');
     const [isSuccess, setIsSuccess] = useState<boolean | null>(null);
+    const [popupOpen, setPopupOpen] = useState(false);
 
     // Handles changes in Input Fields
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -28,6 +41,21 @@ const StudentForm: React.FC = () => {
         }));
     };
 
+    // Auto-close popup after 5 seconds
+    useEffect(() => {
+        if (popupOpen) {
+            const timer = setTimeout(() => {
+                setPopupOpen(false);
+            }, 5000);
+            return () => clearTimeout(timer);
+        }
+    }, [popupOpen]);
+
+    // Handle popup close
+    const handlePopupClose = () => {
+        setPopupOpen(false);
+    };
+
     // Handles Form Submission
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -36,6 +64,7 @@ const StudentForm: React.FC = () => {
         if (!formData.name.trim() || formData.id <= 0 || formData.age <= 0 || !formData.city.trim()) {
             setMessage('Please fill all required fields correctly.');
             setIsSuccess(false);
+            setPopupOpen(true);
             return;
         }
         setMessage('Sending data...');
@@ -46,14 +75,16 @@ const StudentForm: React.FC = () => {
 
             setMessage(`✅ Success! Student data added. ID: ${result.id}`);
             setIsSuccess(true);
+            setPopupOpen(true);
             setFormData({ id: 0, name: '', age: 0, city: '' });
 
         } catch (error: any) {
             console.error('Error:', error);
             const errorMessage = error.response?.data?.message || error.message || 'Unknown error';
 
-            setMessage(` Error: ${errorMessage}`);
+            setMessage(`❌ Error: ${errorMessage}`);
             setIsSuccess(false);
+            setPopupOpen(true);
         }
     };
 
@@ -149,8 +180,8 @@ const StudentForm: React.FC = () => {
                     </Button>
                 </Box>
 
-                {/* Response Message */}
-                {message && (
+                {/* Response Message (keeping original alert for reference, but popup is primary) */}
+                {message && !popupOpen && (
                     <Alert
                         severity={isSuccess ? 'success' : 'error'}
                         sx={{ mt: 2, width: '100%' }}
@@ -159,6 +190,135 @@ const StudentForm: React.FC = () => {
                     </Alert>
                 )}
             </Box>
+
+            {/* Animated Popup Alert */}
+            <Dialog
+                open={popupOpen}
+                TransitionComponent={Transition}
+                keepMounted
+                onClose={handlePopupClose}
+                aria-labelledby="alert-dialog-title"
+                aria-describedby="alert-dialog-description"
+                PaperProps={{
+                    sx: {
+                        borderRadius: 3,
+                        minWidth: 320,
+                        maxWidth: 400,
+                        boxShadow: '0 8px 32px rgba(0,0,0,0.12)',
+                        animation: popupOpen ? 'popupBounce 0.5s ease-out' : 'none',
+                    }
+                }}
+                sx={{
+                    '& .MuiBackdrop-root': {
+                        backgroundColor: 'rgba(0, 0, 0, 0.5)',
+                        backdropFilter: 'blur(4px)',
+                    },
+                }}
+            >
+                <DialogTitle
+                    id="alert-dialog-title"
+                    sx={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'space-between',
+                        pb: 1,
+                        pt: 2.5,
+                        px: 2.5,
+                        backgroundColor: isSuccess ? '#e8f5e9' : '#ffebee',
+                    }}
+                >
+                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
+                        {isSuccess ? (
+                            <CheckCircleIcon sx={{ color: '#4caf50', fontSize: 32 }} />
+                        ) : (
+                            <ErrorIcon sx={{ color: '#f44336', fontSize: 32 }} />
+                        )}
+                        <Typography
+                            variant="h6"
+                            component="span"
+                            sx={{
+                                fontWeight: 600,
+                                color: isSuccess ? '#2e7d32' : '#c62828',
+                            }}
+                        >
+                            {isSuccess ? 'Success!' : 'Error'}
+                        </Typography>
+                    </Box>
+                    <IconButton
+                        aria-label="close"
+                        onClick={handlePopupClose}
+                        sx={{
+                            color: (theme) => theme.palette.grey[500],
+                            '&:hover': {
+                                backgroundColor: 'rgba(0, 0, 0, 0.04)',
+                            },
+                        }}
+                    >
+                        <CloseIcon />
+                    </IconButton>
+                </DialogTitle>
+                <DialogContent
+                    sx={{
+                        px: 2.5,
+                        py: 2.5,
+                        backgroundColor: isSuccess ? '#f1f8f4' : '#fff5f5',
+                    }}
+                >
+                    <Typography
+                        id="alert-dialog-description"
+                        variant="body1"
+                        sx={{
+                            color: isSuccess ? '#1b5e20' : '#b71c1c',
+                            fontSize: '1rem',
+                            lineHeight: 1.6,
+                        }}
+                    >
+                        {message.replace(/✅|❌/g, '').trim()}
+                    </Typography>
+                </DialogContent>
+                <DialogActions
+                    sx={{
+                        px: 2.5,
+                        pb: 2,
+                        pt: 1,
+                        backgroundColor: isSuccess ? '#e8f5e9' : '#ffebee',
+                    }}
+                >
+                    <Button
+                        onClick={handlePopupClose}
+                        variant="contained"
+                        sx={{
+                            backgroundColor: isSuccess ? '#4caf50' : '#f44336',
+                            color: 'white',
+                            textTransform: 'none',
+                            fontWeight: 500,
+                            px: 3,
+                            '&:hover': {
+                                backgroundColor: isSuccess ? '#45a049' : '#da190b',
+                            },
+                        }}
+                    >
+                        OK
+                    </Button>
+                </DialogActions>
+            </Dialog>
+
+            {/* CSS Animation Keyframes */}
+            <style>{`
+                @keyframes popupBounce {
+                    0% {
+                        transform: scale(0.7) translateY(20px);
+                        opacity: 0;
+                    }
+                    50% {
+                        transform: scale(1.05) translateY(-5px);
+                    }
+                    100% {
+                        transform: scale(1) translateY(0);
+                        opacity: 1;
+                    }
+                }
+            `}</style>
         </Container>
     );
 };
