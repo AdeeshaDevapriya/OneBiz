@@ -42,7 +42,7 @@ export default function Buttonn({ countToDoDisplay, buttonName }: ButtonnProps) 
 
     return (
         <div>
-            <h1>COUNT INTERFACE</h1>
+            {/* <h1>COUNT INTERFACE</h1>
             <p>Count: {state.count}</p>
 
             <Button onClick={() => dispatch({type: 'increment'})}>
@@ -50,7 +50,7 @@ export default function Buttonn({ countToDoDisplay, buttonName }: ButtonnProps) 
             </Button>
             <Button onClick={() => dispatch({type: 'decrement'})}>
                 Decrement
-            </Button>
+            </Button> */}
         </div>
     )
 }
