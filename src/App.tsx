@@ -82,23 +82,43 @@ import LoginPage from './components/LoginPage';
 import { AuthProvider, useAuthContext } from "./components/AuthContext";
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import StudentForm from './components/StudentForm';
+import Counter from './components/Counter';
+//import Buttonn from './components/Buttonn';
+import { lazy, SetStateAction, Suspense, useCallback, useState } from 'react';
+import Display from './components/Display';
 
 const queryClient = new QueryClient();
 
 export default function App() {
+
+
+
   return (
     // <AuthProvider>
     <QueryClientProvider client={queryClient}>
       <GuardedApp />
-      </QueryClientProvider>
+    </QueryClientProvider>
     // </AuthProvider>
   );
 }
 
+const Buttonn = lazy(() => import("./components/Buttonn"));
+
 function GuardedApp() {
+  //const [display, setDisplay] = useState<number | string>('');
+
+  const [count, setCount] = useState(0);
+  const [newCount, setNewCount] = useState(0);
+
+  const increment = (count: any) => setNewCount(count)
+
+
+  const buttonName = "Add 1"
+
   // const { user } = useAuthContext();
 
   // if (!user) return <LoginPage />;
+
 
   return (
     <div className="min-h-screen flex flex-col">
@@ -119,18 +139,41 @@ function GuardedApp() {
           </nav>
           <a href="#contact" className="ml-4 bg-blue-600 text-white px-4 py-2 rounded text-sm">Contact</a>
         </div>
+
+        <h2>{count}</h2>
+        {/* <h2 className="text-xl font-bold">Current Count: {display}</h2> */}
+
+        {/* <Buttonn countToDoDisplay={(count: any) => setDisplay(count)}/> */}
       </header>
 
       <main className="flex-1">
-        {/* <Hero />
-        <About />
-        <Services />
-        <Contact />
+        {/* <Hero /> */}
+        {/* <About /> */}
+        {/* <Services /> */}
+        {/* <Contact />
         <UUseFetch /> */}
-        <StudentForm />
+        {/* <StudentForm /> */}
+
+
+        {/* <Counter /> */}
+        {/* <Button /> */}
+
+        {/* <Buttonn countToDoDisplay={(count: any) => setDisplay(count)}/> */}
+
+        {/* <Buttonn onClick={increment} buttonName={buttonName} /> */}
+
+        <Suspense fallback={<p>Loading...</p>}>
+          <Buttonn toDisplay={increment} buttonName={buttonName} />
+        </Suspense>
+
+        <br></br>
+
+        <Display />
+
       </main>
 
       <Footer />
+
     </div>
   );
 }
