@@ -128,7 +128,7 @@ function GuardedApp() {
             <div className="w-10 h-10 rounded bg-blue-600 flex items-center justify-center text-white font-bold">B</div>
             <div>
               <div className="font-bold">gooky</div>
-              <div className="text-xs text-gray-500">Modern websites for small businesses</div>
+              {/* <div className="text-xs text-gray-500">Modern websites for small businesses</div> */}
             </div>
           </div>
           <nav className="hidden md:flex gap-6 text-sm">
@@ -152,7 +152,7 @@ function GuardedApp() {
         {/* <Services /> */}
         {/* <Contact />
         <UUseFetch /> */}
-        {/* <StudentForm /> */}
+        <StudentForm />
 
 
         {/* <Counter /> */}
@@ -162,13 +162,14 @@ function GuardedApp() {
 
         {/* <Buttonn onClick={increment} buttonName={buttonName} /> */}
 
-        <Suspense fallback={<p>Loading...</p>}>
+        {/* <Suspense fallback={<p>Loading...</p>}>
           <Buttonn toDisplay={increment} buttonName={buttonName} />
-        </Suspense>
+        </Suspense> */}
 
         <br></br>
 
-        <Display />
+        {/* <Display /> */}
+
 
       </main>
 

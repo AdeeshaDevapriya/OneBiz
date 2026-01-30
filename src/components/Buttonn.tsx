@@ -15,10 +15,10 @@ const Buttonn = React.memo(({ toDisplay, buttonName }: ButtonnProps) => {
 
     return (
         <div>
-            {/* <h1>COUNT INTERFACE</h1>
+            <h1>COUNT INTERFACE</h1>
             <Button onClick={() => setValue((count) => count + 1)}>
                 {buttonName}
-            </Button> */}
+            </Button>
         </div>
     )
 
